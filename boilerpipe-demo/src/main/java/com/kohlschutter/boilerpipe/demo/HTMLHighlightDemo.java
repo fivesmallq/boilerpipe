@@ -17,23 +17,26 @@
  */
 package com.kohlschutter.boilerpipe.demo;
 
-import java.io.PrintWriter;
-import java.net.URL;
-
 import com.kohlschutter.boilerpipe.BoilerpipeExtractor;
+import com.kohlschutter.boilerpipe.extractors.ArticleExtractor;
 import com.kohlschutter.boilerpipe.extractors.CommonExtractors;
 import com.kohlschutter.boilerpipe.sax.HTMLHighlighter;
 
+import java.awt.*;
+import java.io.PrintWriter;
+import java.net.URI;
+import java.net.URL;
+
 /**
  * Demonstrates how to use Boilerpipe to get the main content, highlighted as HTML.
- * 
+ *
  * @see Oneliner if you only need the plain text.
  */
 public class HTMLHighlightDemo {
   public static void main(String[] args) throws Exception {
     URL url =
-        new URL(
-            "http://blog.openshift.com/day-18-boilerpipe-article-extraction-for-java-developers/");
+            new URL(
+                    "http://www.hindustantimes.com/india-news/state-finance-ministers-to-discuss-model-gst-law-this-week/story-vGSKDiEpPbSYj6hQKaaE7L.html");
 
     // choose from a set of useful BoilerpipeExtractors...
     final BoilerpipeExtractor extractor = CommonExtractors.ARTICLE_EXTRACTOR;
@@ -43,6 +46,7 @@ public class HTMLHighlightDemo {
 
     // choose the operation mode (i.e., highlighting or extraction)
     final HTMLHighlighter hh = HTMLHighlighter.newHighlightingInstance();
+    hh.setOutputHighlightOnly(true);
     // final HTMLHighlighter hh = HTMLHighlighter.newExtractingInstance();
 
     PrintWriter out = new PrintWriter("/tmp/highlighted.html", "UTF-8");
@@ -50,7 +54,8 @@ public class HTMLHighlightDemo {
     out.println("<meta http-equiv=\"Content-Type\" content=\"text-html; charset=utf-8\" />");
     out.println(hh.process(url, extractor));
     out.close();
-
+    System.out.println(ArticleExtractor.getInstance().getText(url));
     System.out.println("Now open file:///tmp/highlighted.html in your web browser");
+    Desktop.getDesktop().browse(new URI("file:///tmp/highlighted.html"));
   }
 }
